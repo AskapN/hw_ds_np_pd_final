@@ -1,0 +1,8 @@
+# Data
+/data/
+
+# IDE
+/.idea/
+
+# Virtual environment
+/.venv/
