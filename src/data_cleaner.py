@@ -22,4 +22,7 @@ def clean_data(merged_data):
     # Строки без даты заказа или без суммы непригодны для расчетов
     df = df.dropna(subset=["order_date", "quantity", "price_per_unit"])
 
+    # Добавляем столбец с выручкой
+    df["revenue"] = df["quantity"] * df["price_per_unit"]
+
     return df
