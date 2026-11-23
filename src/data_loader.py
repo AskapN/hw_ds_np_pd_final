@@ -9,6 +9,14 @@ class DataLoadError(Exception):
 
 
 def load_data():
+    """Загружает три CSV-таблицы (orders, items, users) из data/raw.
+
+    Returns:
+        tuple: (orders, items, users) — три pandas DataFrame.
+
+    Raises:
+        DataLoadError: если папка с данными не найдена или файлы некорректны.
+    """
 
     if not DATA_PATH.exists():
         raise DataLoadError(f"Папка с данными не найдена: {DATA_PATH}")

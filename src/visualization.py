@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 BAR_COLOR = "#1d4ed8"
 
 def _empty_figure():
+    """Возвращает пустой график с заглушкой «Нет данных для отображения»."""
     fig, ax = plt.subplots(figsize=(8, 4))
     ax.text(0.5, 0.5, "Нет данных для отображения",
             ha="center", va="center", fontsize=14)
@@ -10,6 +11,14 @@ def _empty_figure():
     return fig
 
 def plot_top_items(top):
+    """Строит горизонтальную столбчатую диаграмму топ товаров по выручке.
+
+    Args:
+        top (DataFrame): результат top_items с колонками item_name и revenue.
+
+    Returns:
+        Figure: объект matplotlib.
+    """
     if top.empty:
         return _empty_figure()
     fig, ax = plt.subplots(figsize=(10, 6))
@@ -24,6 +33,14 @@ def plot_top_items(top):
     return fig
 
 def plot_category_share(by_category):
+    """Строит диаграмму доли категорий в выручке.
+
+    Args:
+        by_category (DataFrame): результат revenue_by_category с колонками category и share.
+
+    Returns:
+        Figure: объект matplotlib.
+    """
     if by_category.empty:
         return _empty_figure()
     fig, ax = plt.subplots(figsize=(10, 5))
@@ -38,6 +55,14 @@ def plot_category_share(by_category):
     return fig
 
 def plot_orders_by_weekday(by_day):
+    """Строит столбчатую диаграмму заказов по дням недели.
+
+    Args:
+        by_day (DataFrame): результат orders_by_weekday с колонками weekday и orders.
+
+    Returns:
+        Figure: объект matplotlib.
+    """
     fig, ax = plt.subplots(figsize=(8, 4.5))
     ax.bar(by_day["weekday"], by_day["orders"], color=BAR_COLOR)
     ax.set_title("Количество заказов по дням недели")

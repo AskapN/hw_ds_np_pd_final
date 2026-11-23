@@ -10,6 +10,7 @@ from src import visualization as viz
 
 @st.cache_data
 def get_data():
+    """Загружает, объединяет и очищает данные (кэшируется Streamlit)."""
     orders, items, users = load_data()
     merged = merge_data(orders, items, users)
     return clean_data(merged)

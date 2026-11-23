@@ -3,6 +3,14 @@ import pandas as pd
 WEEKDAYS = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"]
 
 def compute_metrics(df):
+    """Считает ключевые показатели продаж.
+
+    Args:
+        df (DataFrame): очищенная таблица с колонками order_id, user_id и revenue.
+
+    Returns:
+        dict: ключи n_orders, revenue, n_users, avg_check.
+    """
     n_orders = int(df["order_id"].nunique())
     revenue = float(df["revenue"].sum())
     n_users = int(df["user_id"].nunique())
@@ -15,6 +23,15 @@ def compute_metrics(df):
     }
 
 def top_items(df, n=10):
+    """Возвращает топ товаров по выручке.
+
+    Args:
+        df (DataFrame): таблица с колонками item_name и revenue.
+        n (int): сколько товаров вернуть.
+
+    Returns:
+        DataFrame: топ n товаров по убыванию выручки.
+    """
     return (
         df.groupby("item_name", as_index=False)["revenue"]
         .sum()
@@ -23,6 +40,14 @@ def top_items(df, n=10):
     )
 
 def revenue_by_category(df):
+    """Считает выручку и её долю по категориям товаров.
+
+    Args:
+        df (DataFrame): таблица с колонками category и revenue.
+
+    Returns:
+        DataFrame: колонки category, revenue и share (доля в %).
+    """
     by_cat = (
         df.groupby("category", as_index=False)["revenue"]
         .sum()
@@ -32,6 +57,14 @@ def revenue_by_category(df):
     return by_cat
 
 def orders_by_weekday(df):
+    """Считает количество заказов по дням недели.
+
+    Args:
+        df (DataFrame): таблица с колонкой order_date (datetime).
+
+    Returns:
+        DataFrame: колонки weekday (Пн–Вс) и orders.
+    """
     counts = (
         df["order_date"].dt.day_of_week
         .value_counts()
@@ -40,6 +73,14 @@ def orders_by_weekday(df):
     return pd.DataFrame({"weekday": WEEKDAYS, "orders": counts.to_numpy()})
 
 def build_conclusions(df):
+    """Формулирует аналитические выводы по данным.
+
+    Args:
+        df (DataFrame): очищенная таблица.
+
+    Returns:
+        list: список строк с выводами для отображения в Streamlit.
+    """
     if df.empty:
         return ["Нет данных для выбранных фильтров - измените категорию или период"]
 
@@ -48,13 +89,13 @@ def build_conclusions(df):
     by_cat = revenue_by_category(df)
     leader_cat = by_cat.iloc[0]
     conclusion.append(
-        f"Основная выручка приходится на категорию '{leader_cat["category"]}' - "
+        f"Основная выручка приходится на категорию '{leader_cat['category']}' - "
         f"{leader_cat['share']:.1f}% выручки среза ({leader_cat['revenue']:,.2f})."
     )
 
     leader_item = top_items(df, n=1).iloc[0]
     conclusion.append(
-        f"Лидер продаж по выручке - '{leader_item["item_name"]}' ({leader_item["revenue"]:,.2f})."
+        f"Лидер продаж по выручке - '{leader_item['item_name']}' ({leader_item['revenue']:,.2f})."
     )
 
     by_day = orders_by_weekday(df)
